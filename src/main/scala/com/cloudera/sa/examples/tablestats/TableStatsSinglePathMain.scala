@@ -40,6 +40,9 @@ object TableStatsSinglePathMain {
 
     //Part E
     println(firstPassStats)
+
+    //Part F
+    sc.stop()
   }
 
   def getFirstPassStat(df: DataFrame): FirstPassStatsModel = {
@@ -57,11 +60,11 @@ object TableStatsSinglePathMain {
     val firstPassStats = columnValueCounts.mapPartitions[FirstPassStatsModel](it => {
       val firstPassStatsModel = new FirstPassStatsModel()
       it.foreach{ case ((columnIdx, columnVal), count) => {
-        firstPassStatsModel.applyColumnValueAndCount(columnIdx, columnVal, count)
+        firstPassStatsModel.+=(columnIdx, columnVal, count)
       }}
       Iterator(firstPassStatsModel)
     }).reduce((a, b) => { //Part D
-      a.mergeColumnStats(b)
+      a.+=(b)
       a
     })
 

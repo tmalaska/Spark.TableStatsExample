@@ -16,7 +16,7 @@ object ConfigurableDataGeneratorMain {
   def main(args: Array[String]): Unit = {
 
     if (args.length == 0) {
-      println("ConfigurableDataGeneratorMain <outputPath> <numberOfColumns> <numberOfRecords> <numberOfPartitions>")
+      println("ConfigurableDataGeneratorMain <outputPath> <numberOfColumns> <numberOfRecords> <numberOfPartitions> <local>")
       return
     }
 
@@ -24,12 +24,21 @@ object ConfigurableDataGeneratorMain {
     val numberOfColumns = args(1).toInt
     val numberOfRecords = args(2).toInt
     val numberOfPartitions = args(3).toInt
+    val runLocal = (args.length == 5 && args(4).eq("L"))
 
-    val sparkConfig = new SparkConf()
-    sparkConfig.set("spark.broadcast.compress", "false")
-    sparkConfig.set("spark.shuffle.compress", "false")
-    sparkConfig.set("spark.shuffle.spill.compress", "false")
-    var sc = new SparkContext("local", "test", sparkConfig)
+    var sc: SparkContext = null
+    if (runLocal) {
+      val sparkConfig = new SparkConf()
+      sparkConfig.set("spark.broadcast.compress", "false")
+      sparkConfig.set("spark.shuffle.compress", "false")
+      sparkConfig.set("spark.shuffle.spill.compress", "false")
+      sc = new SparkContext("local", "test", sparkConfig)
+
+    } else {
+      val sparkConfig = new SparkConf().setAppName("ConfigurableDataGeneratorMain")
+      sc = new SparkContext(sparkConfig)
+    }
+
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)
 
     //Part A
@@ -67,5 +76,8 @@ object ConfigurableDataGeneratorMain {
       )
     val df = sqlContext.createDataFrame(megaDataRDD, schema)
     df.saveAsParquetFile(outputPath)
+
+    //Part D
+    sc.stop()
   }
 }

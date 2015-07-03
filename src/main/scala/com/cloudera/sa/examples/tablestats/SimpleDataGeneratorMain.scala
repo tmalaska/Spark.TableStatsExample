@@ -51,5 +51,7 @@ object SimpleDataGeneratorMain {
     df.columns.foreach( c => println(" - " + c))
 
     df.saveAsParquetFile(outputPath)
+
+    sc.stop()
   }
 }
