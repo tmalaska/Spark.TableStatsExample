@@ -24,7 +24,7 @@ object ConfigurableDataGeneratorMain {
     val numberOfColumns = args(1).toInt
     val numberOfRecords = args(2).toInt
     val numberOfPartitions = args(3).toInt
-    val runLocal = (args.length == 5 && args(4).eq("L"))
+    val runLocal = (args.length == 5 && args(4).equals("L"))
 
     var sc: SparkContext = null
     if (runLocal) {
@@ -33,7 +33,6 @@ object ConfigurableDataGeneratorMain {
       sparkConfig.set("spark.shuffle.compress", "false")
       sparkConfig.set("spark.shuffle.spill.compress", "false")
       sc = new SparkContext("local", "test", sparkConfig)
-
     } else {
       val sparkConfig = new SparkConf().setAppName("ConfigurableDataGeneratorMain")
       sc = new SparkContext(sparkConfig)
@@ -42,14 +41,13 @@ object ConfigurableDataGeneratorMain {
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)
 
     //Part A
-    var sqrtNumberOfRecords = math.sqrt(numberOfRecords).toInt
-    val rowRDD = sc.parallelize( (0 until sqrtNumberOfRecords).map( i => i), numberOfPartitions)
+    val rowRDD = sc.parallelize( (0 until numberOfPartitions).map( i => i), numberOfPartitions)
 
     //Part B
     val megaDataRDD = rowRDD.flatMap( r => {
       val random = new Random()
 
-      val dataRange = (0 until sqrtNumberOfRecords).iterator
+      val dataRange = (0 until numberOfRecords/numberOfPartitions).iterator
       dataRange.map[Row]( x => {
         val values = new mutable.ArrayBuffer[Any]
         for (i <- 0 until numberOfColumns) {

@@ -18,7 +18,7 @@ object TableStatsSinglePathMain {
     }
 
     val inputPath = args(0)
-    val runLocal = (args.length == 2 && args(1).eq("L"))
+    val runLocal = (args.length == 2 && args(1).equals("L"))
     var sc:SparkContext = null
 
     if (runLocal) {
@@ -49,24 +49,24 @@ object TableStatsSinglePathMain {
     val schema = df.schema
 
     //Part B
-    val columnValueCounts = df.flatMap(r => {
+    val columnValueCounts = df.flatMap(r =>
       (0 until schema.length).map { idx =>
         //((columnIdx, cellValue), count)
         ((idx, r.get(idx)), 1l)
       }
-    }).reduceByKey(_ + _) //This is like word count
+    ).reduceByKey(_ + _) //This is like word count
 
     //Part C
-    val firstPassStats = columnValueCounts.mapPartitions[FirstPassStatsModel](it => {
+    val firstPassStats = columnValueCounts.mapPartitions[FirstPassStatsModel]{it =>
       val firstPassStatsModel = new FirstPassStatsModel()
-      it.foreach{ case ((columnIdx, columnVal), count) => {
-        firstPassStatsModel.+=(columnIdx, columnVal, count)
-      }}
+      it.foreach{ case ((columnIdx, columnVal), count) =>
+        firstPassStatsModel += (columnIdx, columnVal, count)
+      }
       Iterator(firstPassStatsModel)
-    }).reduce((a, b) => { //Part D
-      a.+=(b)
+    }.reduce { (a, b) => //Part D
+      a += (b)
       a
-    })
+    }
 
     firstPassStats
   }

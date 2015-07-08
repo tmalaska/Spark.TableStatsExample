@@ -12,7 +12,7 @@ class TopNList(val maxSize:Int)  extends Serializable {
 
   def add(newValue:Any, newCount:Long): Unit = {
     if (topNCountsForColumnArray.length < maxSize -1) {
-      topNCountsForColumnArray.+=((newValue, newCount))
+      topNCountsForColumnArray += ((newValue, newCount))
     } else if (topNCountsForColumnArray.length == maxSize) {
       updateLowestValue
     } else {
@@ -26,13 +26,13 @@ class TopNList(val maxSize:Int)  extends Serializable {
   def updateLowestValue: Unit = {
     var index = 0
 
-    topNCountsForColumnArray.foreach( r => {
+    topNCountsForColumnArray.foreach{ r =>
       if (r._2 < lowestValue) {
         lowestValue = r._2
         lowestColumnCountIndex = index
       }
       index+=1
-    })
+    }
   }
 
 

@@ -50,7 +50,7 @@ class TestTableStatsSinglePathMain extends FunSuite with BeforeAndAfterEach with
 
     assertResult(2)(firstPassStats.columnStatsMap(3).topNValues.topNCountsForColumnArray.length)
 
-    firstPassStats.columnStatsMap(3).topNValues.topNCountsForColumnArray.foreach( r => {
+    firstPassStats.columnStatsMap(3).topNValues.topNCountsForColumnArray.foreach{ r =>
       if (r._1.equals("M")) {
         assertResult(4l)(r._2)
       } else if (r._1.equals("F")) {
@@ -58,6 +58,6 @@ class TestTableStatsSinglePathMain extends FunSuite with BeforeAndAfterEach with
       } else {
         throw new RuntimeException("Unknown gender: " + r._1)
       }
-    })
+    }
   }
 }
