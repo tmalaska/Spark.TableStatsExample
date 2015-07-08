@@ -32,15 +32,12 @@ object TableStatsSinglePathMain {
       sc = new SparkContext(sparkConfig)
     }
     val sqlContext = new org.apache.spark.sql.SQLContext(sc)
-
     //Part A
     var df = sqlContext.parquetFile(inputPath)
-
+    //Part B
     val firstPassStats = getFirstPassStat( df)
-
     //Part E
     println(firstPassStats)
-
     //Part F
     sc.stop()
   }
@@ -48,7 +45,7 @@ object TableStatsSinglePathMain {
   def getFirstPassStat(df: DataFrame): FirstPassStatsModel = {
     val schema = df.schema
 
-    //Part B
+    //Part B.1
     val columnValueCounts = df.flatMap(r =>
       (0 until schema.length).map { idx =>
         //((columnIdx, cellValue), count)

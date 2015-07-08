@@ -1,14 +1,17 @@
 # Spark.TableStatsExample
 Simple Spark example of generating table stats for use of data quality checks
 
-##Main Classes
+##SimpleDataGeneratorMain
+This will generate small test data set
 
-###ConfigurableDataGeneratorMain
+SimpleDataGeneratorMain {outputPath}
+
+##ConfigurableDataGeneratorMain
 This will generate large test data set
 
 ConfigurableDataGeneratorMain {outputPath} {numberOfColumns} {numberOfRecords} {numberOfPartitions}
 
-###TableStatsSinglePathMain
+##TableStatsSinglePathMain
 This will output the following information on a given column in the table
 
 * null count
@@ -21,11 +24,6 @@ This will output the following information on a given column in the table
 * top N values with there cardinality
 
 TableStatsSinglePathMain {inputPath}
-
-###SimpleDataGeneratorMain
-This will generate small test data set.
-
-SimpleDataGeneratorMain {outputPath}
 
 ##Examples of Execution
 ###Small data set

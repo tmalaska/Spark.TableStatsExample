@@ -14,7 +14,7 @@ class ColumnStats(var nulls:Long = 0l,
 
   def avgLong: Long = sumLong/totalCount
 
-  //Part C.B
+  //Part B.1.1
   def +=(colValue: Any, colCount: Long): Unit = {
     totalCount += colCount
     uniqueValues += 1
@@ -36,7 +36,7 @@ class ColumnStats(var nulls:Long = 0l,
     topNValues.add(colValue, colCount)
   }
 
-  //Part C.C
+  //Part B.1.2
   def +=(columnStats: ColumnStats): Unit = {
     totalCount += columnStats.totalCount
     uniqueValues += columnStats.uniqueValues
